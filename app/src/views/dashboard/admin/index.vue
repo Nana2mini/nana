@@ -50,6 +50,8 @@ import BarChart from './components/BarChart'
 import TransactionTable from './components/TransactionTable'
 import TodoList from './components/TodoList'
 import BoxCard from './components/BoxCard'
+import SockJS from 'sockjs-client'
+import Stomp from 'stompjs'
 
 const lineChartData = {
   newVisitis: {
@@ -85,10 +87,33 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      stompClient: ''
     }
   },
+  mounted() {
+    this.initSockJs()
+  },
+  beforeDestroy() {
+    this.destroySockJs()
+  },
   methods: {
+    destroySockJs() {
+      if (this.stompClient != null) {
+        this.stompClient.disconnect()
+      }
+    },
+    initSockJs() {
+      const socket = new SockJS('http://localhost:9090/notification')
+      this.stompClient = Stomp.over(socket)
+      this.stompClient.connect({}, (resp) => {
+        console.log('websocket连接成功:' + resp)
+        // 另外再注册一下消息推送
+        this.stompClient.subscribe('/topic/server', (response) => {
+          console.log('消息推送:' + response.body)
+        })
+      })
+    },
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     }
