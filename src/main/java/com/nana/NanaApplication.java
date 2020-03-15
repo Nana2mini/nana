@@ -1,21 +1,16 @@
 package com.nana;
 
-import com.nana.commom.kafka.Consumer;
-import com.nana.commom.kafka.Producer;
-import com.nana.commom.utils.Constants;
-import com.nana.modules.user.model.User;
+import com.nana.common.kafka.Producer;
 import com.nana.modules.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-import java.util.List;
-
+@ServletComponentScan
 @RestController
 @SpringBootApplication
 public class NanaApplication {
@@ -28,7 +23,14 @@ public class NanaApplication {
 
 	}
 
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/")
     public void test(String[] args) {
+
+        userService.getUserDAO();
+
+
     }
 }

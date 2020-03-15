@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.nana.modules.user.dao.UserDAO;
 import com.nana.modules.user.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,4 +15,10 @@ import org.springframework.stereotype.Service;
 @Service("userService")
 public class UserService extends ServiceImpl<UserDAO, User> implements IService<User> {
 
+    @Autowired
+    private UserDAO userDAO;
+
+    public void getUserDAO() {
+        userDAO.selectList(null);
+    }
 }
